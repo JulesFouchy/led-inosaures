@@ -30,17 +30,15 @@ void App::update()
 
 void App::render(RenderTarget& render_target, float time)
 {
-    render_target.render([&]() {
-        glClearColor(1., 0., 1., 1.);
-        glClear(GL_COLOR_BUFFER_BIT);
-        // _fullscreen_pipeline.shader().bind();
-        // _fullscreen_pipeline.shader().set_uniform("u.time", time);
-        // _fullscreen_pipeline.draw();
-    });
+    _led_renderer.render(render_target, time);
 }
 
 void App::ImGuiWindows()
 {
+    ImGui::Begin("LED Renderer");
+    _led_renderer.imgui();
+    ImGui::End();
+    //
     Log::ToUser::imgui_console_window();
     //
     ImGui::Begin("Time");
