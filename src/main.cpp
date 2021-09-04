@@ -7,7 +7,7 @@ void main()
 {
     Cool::initialize();
     auto  window_factory = Cool::WindowFactory{3, 3};
-    auto& window         = window_factory.make_main_window("You can change the window name in main.cpp", 1280, 720);
+    auto& window         = window_factory.make_main_window("led-inosaures (c'est rigolo)", 1280, 720);
 #if !defined(DEBUG)
     glfwMaximizeWindow(window.glfw());
 #endif

@@ -7,13 +7,16 @@ void register_effect(std::string_view name, CurrentEffect& e);
 // *----- REGISTER YOUR EFFECTS HERE -----*
 // ****************************************
 
+// STEP 1
 #include "ConstantColor.h"
 #include "Gradient.h"
 
+// STEP 2
 using Effect = std::variant<
     Gradient,
     ConstantColor>;
 
+// STEP 3
 inline void RegisterEffects(CurrentEffect& e)
 {
     register_effect<Gradient>("Gradient", e);
