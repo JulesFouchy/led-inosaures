@@ -9,16 +9,17 @@
 class LedRenderer {
 public:
     LedRenderer();
-    void render(Cool::RenderTarget& render_target, float time) const;
+    void render(Cool::RenderTarget& render_target, float time);
     void imgui();
 
 private:
     int                                    _nb_leds          = 30;
     glm::vec3                              _background_color = glm::vec3(0.f, 0.f, 0.f);
-    mutable Cool::Camera                   _camera;
+    Cool::Camera                           _camera;
     Cool::ProjectionController_Perspective _proj_controller;
-    mutable Cool::ViewController_Orbital   _view_controller;
+    Cool::ViewController_Orbital           _view_controller;
     CubeRenderer                           _cube_renderer;
+    std::vector<glm::vec3>                 _leds_colors;
 
 private:
     // Serialization

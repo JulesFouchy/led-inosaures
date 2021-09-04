@@ -7,8 +7,13 @@ LedRenderer::LedRenderer()
     _view_controller.on_wheel_up(_camera);
 }
 
-void LedRenderer::render(Cool::RenderTarget& render_target, float time) const
+void LedRenderer::render(Cool::RenderTarget& render_target, float time)
 {
+    _leds_colors.resize(_nb_leds);
+    for (auto i = 0; i < _leds_colors.size(); ++i) {
+        float t         = static_cast<float>(i) / static_cast<float>(_leds_colors.size() - 1);
+        _leds_colors[i] = glm::vec3{t};
+    }
     _proj_controller.apply_to(_camera, render_target.info().viewport.aspectRatio());
     render_target.render([&]() {
         glClearColor(_background_color.r,
@@ -16,7 +21,7 @@ void LedRenderer::render(Cool::RenderTarget& render_target, float time) const
                      _background_color.b,
                      1.);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        _cube_renderer.render(_camera, _nb_leds);
+        _cube_renderer.render(_camera, _leds_colors);
     });
 }
 
