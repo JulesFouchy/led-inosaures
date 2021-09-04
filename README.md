@@ -39,3 +39,22 @@ register_effect<Gradient>("Gradient", e);
 register_effect<ConstantColor>("Constant Color", e);
 // Your new effect goes here, last
 ```
+
+## Details
+
+### imgui()
+
+The ```imgui()``` methods allows you to add sliders, buttons and many more widgets to the UI ! This is very useful to tweak values and see the effect live. If you are not familiar with ImGui, then type ```ImGui::``` and let the autocompletion show you all the widgets available.
+ You will most likely be interested by :
+ ```cpp
+ImGui::SliderFloat(/* ... */);
+ImGui::ColorEdit3(/* ... */);
+ ```
+
+ You can also see an example of how to use ImGui in the *ConstantColor.h* file.
+
+ ### Serialization
+
+ The ```serialize()``` method allows you to save members of your class, so that their current value isn't lost when you close the app !
+
+ You can see an example of this beeing used in *ConstantColor.h*.
