@@ -37,7 +37,7 @@ private:
     Cool::ImageSizeConstraint _preview_constraint;
     Cool::RenderTarget        _render_target;
 #ifndef NDEBUG
-    bool m_bShow_Debug     = true;
+    bool m_bShow_Debug     = false;
     bool m_bShow_ImGuiDemo = false;
 #endif
 
