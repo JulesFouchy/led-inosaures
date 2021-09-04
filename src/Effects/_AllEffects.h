@@ -1,6 +1,7 @@
 #pragma once
+class CurrentEffect;
 template<typename T>
-void register_effect(std::string_view name);
+void register_effect(std::string_view name, CurrentEffect& e);
 
 // ****************************************
 // *----- REGISTER YOUR EFFECTS HERE -----*
@@ -13,10 +14,10 @@ using Effect = std::variant<
     Gradient,
     ConstantColor>;
 
-inline void RegisterEffects()
+inline void RegisterEffects(CurrentEffect& e)
 {
-    register_effect<Gradient>("Gradient");
-    register_effect<ConstantColor>("Constant Color");
+    register_effect<Gradient>("Gradient", e);
+    register_effect<ConstantColor>("Constant Color", e);
 }
 
 // ********************************************************
@@ -34,12 +35,6 @@ public:
     {
         ImGui::Combo("Effect", &_current_effect_idx, _effects_names_list.c_str());
         std::visit([&](auto&& effect) { effect.imgui(); }, current_effect());
-    }
-
-    static CurrentEffect& instance()
-    {
-        static CurrentEffect my_instance{};
-        return my_instance;
     }
 
     template<typename T>
@@ -70,7 +65,7 @@ private:
 };
 
 template<typename T>
-void register_effect(std::string_view name)
+void register_effect(std::string_view name, CurrentEffect& e)
 {
-    CurrentEffect::instance().register_effect<T>(name);
+    e.register_effect<T>(name);
 }

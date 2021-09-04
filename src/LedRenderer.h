@@ -5,6 +5,7 @@
 #include <Cool/Camera/ViewController_Orbital.h>
 #include <Cool/Gpu/RenderTarget.h>
 #include "CubeRenderer.h"
+#include "Effects/_AllEffects.h"
 
 class LedRenderer {
 public:
@@ -20,6 +21,7 @@ private:
     Cool::ViewController_Orbital           _view_controller;
     CubeRenderer                           _cube_renderer;
     std::vector<glm::vec3>                 _leds_colors;
+    CurrentEffect                          _current_effect;
 
 private:
     // Serialization
@@ -30,6 +32,7 @@ private:
         archive(
             cereal::make_nvp("Background color", _background_color),
             cereal::make_nvp("Number of LEDs", _nb_leds),
-            cereal::make_nvp("LEDS", _cube_renderer));
+            cereal::make_nvp("LEDS", _cube_renderer),
+            cereal::make_nvp("Current Effect", _current_effect));
     }
 };

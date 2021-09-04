@@ -9,6 +9,17 @@ public:
             colors[i] = glm::vec3{t + time};
         }
     }
+    void imgui() // Displays some UI to control the effect ; this is very usefull to quickly find values that look good !
+    {
+    }
 
-    void imgui(){};
+private:
+    // Serialization. This allows us to save your current settings and restore them when you close and re-open the application !
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        // archive(
+        //     /* you can add more member variables here */);
+    }
 };
