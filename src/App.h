@@ -7,7 +7,6 @@
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Image/ImageSizeConstraint.h>
 #include <Cool/Window/Window.h>
-#include "Serialization/SerializedClassExample.h"
 
 using namespace Cool;
 
@@ -30,15 +29,11 @@ private:
     void render(RenderTarget& render_target, float time);
 
 private:
-    Window&                m_mainWindow;
-    glm::vec3              m_bgColor = glm::vec3(0.478f, 0.674f, 0.792f);
-    SerializedClassExample m_serializedClassExample;
+    Window& m_mainWindow;
 
     Cool::Exporter            _exporter;
     Cool::ImageSizeConstraint _preview_constraint;
     Cool::RenderTarget        _render_target;
-    Cool::RenderTarget        _render_target2;
-    Cool::FullscreenPipeline  _fullscreen_pipeline{File::root_dir() + "/shaders/demo.frag"};
 #ifndef NDEBUG
     bool m_bShow_Debug     = true;
     bool m_bShow_ImGuiDemo = false;
@@ -50,8 +45,8 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(
-            cereal::make_nvp("A serialization example", m_serializedClassExample),
-            CEREAL_NVP(m_bgColor));
+        // archive(
+        //     cereal::make_nvp("A serialization example", m_serializedClassExample),
+        //     CEREAL_NVP(m_bgColor));
     }
 };

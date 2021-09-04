@@ -1,6 +1,4 @@
 #include "App.h"
-#include <Cool/App/Input.h>
-#include <Cool/Gpu/Vulkan/Context.h>
 #include <Cool/Image/ImageSizeConstraintU.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Serialization/JsonFile.h>
@@ -8,46 +6,23 @@
 
 App::App(Window& mainWindow)
     : m_mainWindow(mainWindow)
-// , m_shader("Cool/Renderer_Fullscreen/fullscreen.vert", "shaders/demo.frag")
 {
     Serialization::from_json(*this, File::root_dir() + "/last-session-cache.json");
-    Log::ToUser::info(
-        "App::App",
-        "You can display messages to the user using Log::ToUser, "
-        "and you can {} them !",
-        "format");
-    // glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the
-    // blending is WRONG for the alpha channel (but it doesn't matter in most
-    // cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA,
-    // GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha =
-    // srcAlpha + dstAlpha - srcAlpha*dstAlpha
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 App::~App()
 {
     Serialization::to_json(*this, File::root_dir() + "/last-session-cache.json", "App");
-#if defined(__COOL_APP_VULKAN)
-    vkDeviceWaitIdle(Vulkan::context().g_Device); // TODO is this necessary ? Is this the right place ?
-#endif
 }
 
 void App::update()
 {
     Time::update();
     ImageSizeConstraintU::apply(_preview_constraint, _render_target);
-    ImageSizeConstraintU::apply(_preview_constraint, _render_target2);
-    // m_renderer.begin();
-    // {
-    // 	glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
-    // 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // 	m_shader.bind();
-    // 	m_renderer.render();
-    // }
-    // m_renderer.end();
     render(_render_target, Time::time());
-    render(_render_target2, -Time::time());
     _exporter.update({_render_target, [&](RenderTarget& render_target) {
                           render(render_target, Time::time());
                       }});
@@ -55,30 +30,17 @@ void App::update()
 
 void App::render(RenderTarget& render_target, float time)
 {
-#if defined(__COOL_APP_VULKAN)
-    render_target.render([&](vk::CommandBuffer& cb) {
-        _fullscreen_pipeline.rebuild_for_render_target(render_target.info());
-        cb.pushConstants(_fullscreen_pipeline.layout(), vk::ShaderStageFlagBits::eFragment, 0, sizeof(time), (const void*)&time);
-        _fullscreen_pipeline.draw(cb);
-    });
-
-#elif defined(__COOL_APP_OPENGL)
     render_target.render([&]() {
         glClearColor(1., 0., 1., 1.);
         glClear(GL_COLOR_BUFFER_BIT);
-        _fullscreen_pipeline.shader().bind();
-        _fullscreen_pipeline.shader().set_uniform("u.time", time);
-        _fullscreen_pipeline.draw();
+        // _fullscreen_pipeline.shader().bind();
+        // _fullscreen_pipeline.shader().set_uniform("u.time", time);
+        // _fullscreen_pipeline.draw();
     });
-#endif
 }
 
 void App::ImGuiWindows()
 {
-    //
-    ImGui::Begin("Serialization");
-    m_serializedClassExample.ImGui();
-    ImGui::End();
     Log::ToUser::imgui_console_window();
     //
     ImGui::Begin("Time");
@@ -86,7 +48,6 @@ void App::ImGuiWindows()
     ImGui::End();
     //
     _render_target.imgui_window("1");
-    _render_target2.imgui_window("2");
     _exporter.imgui_window_export_image({_render_target,
                                          [&](RenderTarget& render_target) { render(render_target, Time::time()); }});
     _exporter.imgui_window_export_image_sequence();
@@ -96,15 +57,6 @@ void App::ImGuiWindows()
         ImGui::Begin("Debug", &m_bShow_Debug);
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
         m_mainWindow.imgui_cap_framerate();
-        // ImGui::Text("Rendering Size : %d %d", PreviewOptions::Size().width(),
-        //             PreviewOptions::Size().height());
-        ImGui::Text("Mouse Position in Render Area : %.0f %.0f screen coordinates",
-                    Input::MouseInScreenCoordinates().x,
-                    Input::MouseInScreenCoordinates().y);
-        ImGui::Text("Mouse Position Normalized : %.2f %.2f",
-                    Input::MouseInNormalizedRatioSpace().x,
-                    Input::MouseInNormalizedRatioSpace().y);
-        ImGui::ColorEdit3("Background Color", glm::value_ptr(m_bgColor));
         ImGui::Checkbox("Show Demo Window", &m_bShow_ImGuiDemo);
         ImGui::End();
     }
