@@ -1,4 +1,5 @@
 #pragma once
+#include "../Math.h"
 
 class Gradient {
 public:
@@ -6,7 +7,7 @@ public:
     {
         for (auto i = 0; i < colors.size(); ++i) {
             float t   = static_cast<float>(i) / static_cast<float>(colors.size() - 1);
-            colors[i] = glm::vec3{t + time};
+            colors[i] = glm::vec3{fract(t + time)};
         }
     }
     void imgui() // Displays some UI to control the effect ; this is very usefull to quickly find values that look good !
