@@ -1,0 +1,46 @@
+{
+    "App": {
+        "LED Renderer": {
+            "Background color": {
+                "value0": 0.028018079698085786,
+                "value1": 0.02803664654493332,
+                "value2": 0.2598039507865906
+            },
+            "Number of LEDs": 30,
+            "LEDS": {
+                "LED Size": {
+                    "value0": 1.1859999895095826,
+                    "value1": 4.1529998779296879,
+                    "value2": 4.1529998779296879
+                }
+            },
+            "Current Effect": {
+                "Effects": [
+                    {
+                        "index": 0,
+                        "data": {}
+                    },
+                    {
+                        "index": 1,
+                        "data": {
+                            "value0": {
+                                "value0": 0.8774510025978088,
+                                "value1": 0.5290513038635254,
+                                "value2": 0.5290513038635254
+                            }
+                        }
+                    },
+                    {
+                        "index": 0,
+                        "data": {}
+                    },
+                    {
+                        "index": 0,
+                        "data": {}
+                    }
+                ],
+                "Current effect index": 0
+            }
+        }
+    }
+}
