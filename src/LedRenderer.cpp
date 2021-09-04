@@ -2,7 +2,6 @@
 
 LedRenderer::LedRenderer()
 {
-    RegisterEffects(_current_effect);
     _view_controller.on_wheel_down(_camera, 0);
     _view_controller.on_mouse_move(_camera, {0.1f, 3.f});
     _view_controller.on_wheel_up(_camera);
