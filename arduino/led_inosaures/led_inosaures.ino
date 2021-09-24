@@ -1,7 +1,8 @@
 #include <Adafruit_CircuitPlayground.h>
 
 #define NEOPIX_PIN A2
-static constexpr int nb_leds = 30;
+static constexpr int nb_leds    = 30;
+static int           brightness = 255;
 
 Adafruit_CPlay_NeoPixel strip = Adafruit_CPlay_NeoPixel(nb_leds, NEOPIX_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -27,7 +28,6 @@ int clamp(int x)
 
 void gradient(Adafruit_CPlay_NeoPixel& strip)
 {
-    strip.setBrightness(255);
     static int frame = 0;
     for (int i = 0; i < nb_leds; ++i) {
         float t = sin(frame * 0.01 + i * 0.1) * 0.5 + 0.5;
@@ -123,6 +123,7 @@ void setup()
 
 void loop()
 {
+    strip.setBrightness(brightness);
     if (CircuitPlayground.slideSwitch()) {
         gradient(strip);
     }
@@ -131,4 +132,10 @@ void loop()
     }
     strip.show();
     delay(50);
+    if (CircuitPlayground.leftButton()) {
+        brightness = clamp(brightness - 10);
+    }
+    if (CircuitPlayground.rightButton()) {
+        brightness = clamp(brightness + 10);
+    }
 }
