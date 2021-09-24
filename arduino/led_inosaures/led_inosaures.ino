@@ -123,7 +123,12 @@ void setup()
 
 void loop()
 {
-    ping_pong(strip);
+    if (CircuitPlayground.slideSwitch()) {
+        gradient(strip);
+    }
+    else {
+        ping_pong(strip);
+    }
     strip.show();
     delay(50);
 }
