@@ -5,6 +5,21 @@ static constexpr int nb_leds = 30;
 
 Adafruit_CPlay_NeoPixel strip = Adafruit_CPlay_NeoPixel(nb_leds, NEOPIX_PIN, NEO_GRB + NEO_KHZ800);
 
+uint8_t red(uint32_t col)
+{
+    return (col >> 16) & 255;
+}
+
+uint8_t green(uint32_t col)
+{
+    return (col >> 8) & 255;
+}
+
+uint8_t blue(uint32_t col)
+{
+    return col & 255;
+}
+
 void gradient(Adafruit_CPlay_NeoPixel& strip)
 {
     static int frame = 0;
