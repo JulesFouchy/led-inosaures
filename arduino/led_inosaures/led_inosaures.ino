@@ -42,24 +42,76 @@ void fade(Adafruit_CPlay_NeoPixel& strip)
 {
     for (int i = 0; i < nb_leds; ++i) {
         auto prev_col = strip.getPixelColor(i);
-        auto falloff  = 10;
+        auto falloff  = 0.8f;
         strip.setPixelColor(i,
-                            clamp(red(prev_col) - falloff),
-                            clamp(green(prev_col) - falloff),
-                            clamp(blue(prev_col) - falloff));
+                            (red(prev_col) * falloff),
+                            (green(prev_col) * falloff),
+                            (blue(prev_col) * falloff));
     }
 }
 
 void ping_pong(Adafruit_CPlay_NeoPixel& strip)
 {
-    static int pos1 = 10;
-    static int dir1 = 1;
-    static int pos2 = 17;
-    static int dir2 = -1;
-    if (pos1 == 10)
-        strip.setPixelColor(0, 255, 110, 200);
-    pos1 = 1;
+    struct Ball {
+        int     pos;
+        int     dir;
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+
+        void set_col(Adafruit_CPlay_NeoPixel& strip)
+        {
+            strip.setPixelColor(pos, r, g, b);
+        }
+
+        void advance()
+        {
+            pos += dir;
+            if (pos < 0 || pos > nb_leds) {
+                dir *= -1;
+            }
+        }
+
+        void check_intersection(Ball& b)
+        {
+            if (pos == b.pos) {
+                dir *= -1;
+                b.dir *= -1;
+                advance();
+                b.advance();
+            }
+        }
+    };
+    static Ball ball1 = {
+        10,
+        1,
+        255,
+        110,
+        200};
+    static Ball ball2 = {
+        24,
+        -1,
+        110,
+        255,
+        200};
+    static Ball ball3 = {
+        16,
+        1,
+        200,
+        110,
+        255};
+    static int frame = 0;
+    ball1.set_col(strip);
+    ball2.set_col(strip);
+    ball3.set_col(strip);
+    ball1.advance();
+    ball2.advance();
+    ball3.advance();
+    ball1.check_intersection(ball2);
+    ball1.check_intersection(ball3);
+    ball2.check_intersection(ball3);
     fade(strip);
+    frame++;
 }
 
 void setup()
